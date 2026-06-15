@@ -49,9 +49,14 @@ def main() -> None:
 
     client = OpenAI(api_key=api_key)
 
+    # response = client.responses.create(
+    #     model=model,
+    #     input=build_prompt(read_file(target_file), user_request)
+    # )
+
     response = client.responses.create(
         model=model,
-        input=build_prompt(read_file(target_file), user_request)
+        input="Reply with exactly: orchestration environment ready"
     )
 
     print("\n=== MODEL RESPONSE ===\n")
@@ -62,10 +67,10 @@ def main() -> None:
     print("Input Length:", len(read_file(target_file)))
     print("Output Length:", len(response.output_text))
 
-    # print("Tokens:", response.usage.total_tokens)
+    print("Tokens:", response.usage.total_tokens)
     # print("Cost (USD):", response.usage.total_cost)
-    # print("Time (ms):", response.usage.total_time)
-    # print("Model:", response.model)
+    print("Time (ms):", response.usage)
+    print("Model:", response.model)
 
 
 if __name__ == "__main__":
