@@ -10,6 +10,15 @@ target_file = Path("../ai-agent-portfolio/src/App.tsx")
 
 user_request = "Add a testimonials section"
 
+def get_api_key() -> str:
+    api_key = os.getenv("OPENAI_API_KEY")
+
+    if not api_key:
+        print("ERROR: OPENAI_API_KEY missing in .env")
+        sys.exit(1)
+
+    return api_key
+
 def read_file(file_path: Path) -> str:
     if not file_path.exists():
         print(f"ERROR: File {file_path} does not exist.")
@@ -33,6 +42,19 @@ Return a modified version of the file content that fulfills the user request.
 Do not include any explanations or additional text, only return the modified file content.
 """
 
+def generate_updated_file(client: OpenAI, model: str, prompt: str) -> str:
+    response = client.responses.create(
+        model=model,
+        input=prompt,
+    )
+
+    print("\n=== RESPONSE STATS ===\n")
+    print("Output Length:", len(response.output_text))
+    print("Tokens:", response.usage.total_tokens)
+    print("Model:", response.model)
+
+    return response.output_text
+
 def validate_output(updated_code: str) -> bool:
     # Basic validation: Check if the output is not empty and contains some code structure
     if not updated_code.strip():
@@ -55,43 +77,31 @@ def write_file(file_path: Path, content: str) -> None:
 def main() -> None:
     load_dotenv()
 
-    api_key = os.getenv("OPENAI_API_KEY")
-
-    if not api_key:
-        print("ERROR: OPENAI_API_KEY missing in .env")
-        sys.exit(1)
-
+    api_key = get_api_key()
     model = os.getenv("OPENAI_MODEL", "gpt-5.2")
+    current_code = read_file(target_file)
 
     print("\n===  FILE PREVIEW ===\n")
-    print(target_file.read_text(encoding="utf-8")[:500])  # Print the first 500 characters of the file
+    print(current_code[:500])  # Print the first 500 characters of the file
 
     client = OpenAI(api_key=api_key)
+    prompt = build_prompt(current_code, user_request)   
 
-    response = client.responses.create(
-        model=model,
-        input=build_prompt(target_file.read_text(encoding="utf-8"), user_request)
-    )
+    response = generate_updated_file(client=client, model=model, prompt=prompt)
 
-    is_valid = validate_output(response.output_text)
+    is_valid = validate_output(updated_code=response)
+
+    print("\n=== VALIDATION ===\n")
+    print(is_valid)
 
     if not is_valid:
         print("ERROR: Model output failed validation.")
         sys.exit(1)
 
-    write_file(target_file, response.output_text)
+    write_file(target_file, response)
 
-    print("\n=== VALIDATION ===\n")
-    print(is_valid)
-
-    print("\n=== MODEL RESPONSE ===\n")
-    print(response.output_text)
-    
-    print("\n=== RESPONSE STATS ===\n")
-    print("Input Length:", len(target_file.read_text(encoding="utf-8")))
-    print("Output Length:", len(response.output_text))
-    print("Tokens:", response.usage.total_tokens)
-    print("Model:", response.model)
+    print("\n=== FILE UPDATED ===\n")
+    print(f"Updated: {target_file}")
 
 
 if __name__ == "__main__":
