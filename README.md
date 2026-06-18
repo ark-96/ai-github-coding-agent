@@ -8,7 +8,7 @@
 
 **Status:** 🚧 Active Development
 
-**Current Milestone:** **1.4 – CLI Input Generalization**
+**Current Milestone:** **1.5 – CLI Input Generalization**
 
 This project is being developed incrementally through a series of implementation milestones. Each milestone introduces a single architectural capability while maintaining a fully working system at every stage.
 
@@ -21,7 +21,8 @@ This project is being developed incrementally through a series of implementation
 | OpenAI Responses API Integration | ✅ Complete     |
 | AI File Modification Pipeline    | ✅ Complete     |
 | Build Verification               | ✅ Complete     |
-| CLI User Input                   | 🚧 In Progress |
+| CLI User Input                   | ✅ Complete     |
+| Repository Generalization        | 🚧 In Progress  |
 | Repository Generalization        | ⏳ Planned      |
 | Git Automation                   | ⏳ Planned      |
 | Pull Request Automation          | ⏳ Planned      |
@@ -156,11 +157,26 @@ This milestone establishes the first working end-to-end AI coding pipeline.
 
 ---
 
+## Milestone 1.4 — CLI Input Generalization
+
+Generalized the AI editing workflow by replacing the hardcoded modification request with command-line input.
+
+The current system can:
+
+* Accept arbitrary natural language modification requests via the CLI
+* Validate user input before executing the editing pipeline
+* Reuse the existing prompt construction and AI orchestration workflow without modification
+* Produce different AI-generated outputs based on the supplied request
+
+This milestone separates user interaction from the orchestration pipeline, transforming the project from a fixed proof of concept into a reusable command-line tool while intentionally retaining the existing single-file editing architecture.
+
+---
+
 # Current Capabilities
 
 The current MVP can:
 
-* Accept a modification request (currently hardcoded)
+* Accept arbitrary natural language modification requests through the CLI
 * Read an existing source file
 * Build a structured prompt
 * Generate updated code using the OpenAI Responses API
@@ -205,7 +221,8 @@ These constraints are intentional while the core architecture is being establish
 
 ## 🚧 Phase 2 — Workflow Generalization
 
-* [ ] CLI input
+* [x] CLI input
+* [ ] Automated build validation
 * [ ] Configurable targets
 * [ ] Repository context selection/Target discovery
 * [ ] Prompt refinement
