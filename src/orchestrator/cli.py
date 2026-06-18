@@ -8,8 +8,6 @@ from openai import OpenAI
 
 target_file = Path("../ai-agent-portfolio/src/App.tsx")
 
-user_request = "Add a testimonials section"
-
 def get_api_key() -> str:
     api_key = os.getenv("OPENAI_API_KEY")
 
@@ -25,7 +23,14 @@ def read_file(file_path: Path) -> str:
         sys.exit(1)
 
     return file_path.read_text(encoding="utf-8")
-    
+
+def get_user_request() -> str:
+    if len(sys.argv) < 2:
+        print("ERROR: User request not provided. Usage: python src.orchestratorcli 'Your request here'")
+        sys.exit(1)
+
+    return sys.argv[1]
+
 def build_prompt(file_content: str, user_request: str) -> str:
     return f"""
 You are acting as a software engineer. 
@@ -85,6 +90,7 @@ def main() -> None:
     print(current_code[:500])  # Print the first 500 characters of the file
 
     client = OpenAI(api_key=api_key)
+    user_request = get_user_request()
     prompt = build_prompt(current_code, user_request)   
 
     response = generate_updated_file(client=client, model=model, prompt=prompt)

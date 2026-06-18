@@ -43,13 +43,34 @@ The current scope is intentionally limited to a single target file while establi
 
 # Project Overview
 
-Modern AI coding assistants demonstrate impressive code generation capabilities, but the surrounding engineering workflow—repository interaction, validation, Git automation, and software lifecycle management—is equally important.
+Modern AI coding assistants demonstrate impressive code generation capabilities, but the surrounding engineering workflow—repository interaction, validation, Git automation, and software lifecycle management which is equally important.
 
 This project explores that orchestration layer by incrementally building an end-to-end AI-assisted development workflow while intentionally maintaining a working system at every milestone.
 
 The long-term objective is to build an autonomous system capable of understanding natural language development requests, analyzing an existing repository, generating code modifications, validating those changes, and automating portions of the GitHub development lifecycle.
 
 Development follows an incremental, milestone-based approach. Each milestone introduces one new architectural capability while preserving a stable, working implementation.
+
+---
+
+## Related Repository
+
+The current implementation is intentionally constrained to a single source file within a controlled target repository while the core orchestration workflow is being established.
+
+**React Target Repository**
+
+https://github.com/ark-96/ai-agent-portfolio
+
+This repository serves as a controlled environment for developing and validating the orchestration pipeline while limiting the scope of repository analysis and code generation.
+
+The target was intentionally chosen because it provides:
+
+- A realistic software project structure
+- Immediate visual feedback after AI-generated modifications
+- Deterministic build verification using `npm run build`
+- A manageable codebase for incremental architectural development
+
+Although the current implementation is limited to this repository, the long-term architecture is being designed to support additional repository types through repository-specific validation workflows.
 
 ---
 
@@ -222,4 +243,4 @@ This project is guided by a small set of engineering principles:
 * Validate changes continuously
 * Accurately represent project capabilities without overstating maturity
 
-The objective is not only to build an AI coding agent, but also to document the engineering decisions and iterative development process behind it, resulting in a portfolio-quality demonstration of practical AI software engineering.
+The objective is not only to build an AI coding agent, but also to document the engineering decisions and iterative development process behind it, resulting in a portfolio quality demonstration of practical AI software engineering.
