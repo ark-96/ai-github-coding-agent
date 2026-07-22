@@ -1,6 +1,8 @@
 import os
+import shutil
 import sys
 from pathlib import Path
+import subprocess
 from urllib import response
 
 from dotenv import load_dotenv
@@ -79,6 +81,54 @@ def validate_output(updated_code: str) -> bool:
 def write_file(file_path: Path, content: str) -> None:
     file_path.write_text(content, encoding="utf-8")
 
+def run_build_validation(file_path: Path) -> bool:
+    try:
+        # Determine the project directory to run `npm run build` in.
+        # If `file_path` is a file, walk up to find the nearest package.json.
+        project_dir = Path(file_path)
+        if project_dir.is_file():
+            project_dir = project_dir.parent
+
+        # Walk up until we find a package.json (max 5 levels), otherwise use the immediate parent.
+        found = False
+        for _ in range(6):
+            if (project_dir / "package.json").exists():
+                found = True
+                break
+            if project_dir.parent == project_dir:
+                break
+            project_dir = project_dir.parent
+
+        if not found:
+            print("ERROR: Could not find package.json for the target project.")
+            return False
+
+        result = subprocess.run(
+            "npm run build",
+            cwd=str(project_dir),
+            check=True,
+            capture_output=True,
+            text=True,
+            shell=True,
+        )
+        print("\n=== BUILD OUTPUT ===\n")
+        print(result.stdout)
+        return True
+    except subprocess.CalledProcessError as e:
+        print("\n=== BUILD ERROR ===\n")
+        if e.stdout:
+            print(e.stdout)
+        if e.stderr:
+            print(e.stderr)
+        print(f"BUILD VALIDATION FAILED — exit code {e.returncode}")
+        return False
+    except FileNotFoundError:
+        print("ERROR: 'npm' executable not found. Is Node.js installed and on PATH?")
+        return False
+    except NotADirectoryError as e:
+        print(f"ERROR: Invalid directory for build: {e}")
+        return False
+
 def main() -> None:
     load_dotenv()
 
@@ -108,6 +158,11 @@ def main() -> None:
 
     print("\n=== FILE UPDATED ===\n")
     print(f"Updated: {target_file}")
+
+    build_passed = run_build_validation(target_file)
+
+    if not build_passed:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
