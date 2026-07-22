@@ -8,7 +8,7 @@
 
 **Status:** 🚧 Active Development
 
-**Current Milestone:** **1.5 – CLI Input Generalization**
+**Current Milestone:** **2.2 – CLI Input Generalization**
 
 This project is being developed incrementally through a series of implementation milestones. Each milestone introduces a single architectural capability while maintaining a fully working system at every stage.
 
@@ -22,8 +22,8 @@ This project is being developed incrementally through a series of implementation
 | AI File Modification Pipeline    | ✅ Complete     |
 | Build Verification               | ✅ Complete     |
 | CLI User Input                   | ✅ Complete     |
-| Automated Build Validation       | 🚧 In Progress  |
-| Repository Generalization        | ⏳ Planned      |
+| Automated Build Validation       | ✅ Complete     |
+| Repository Generalization        | 🚧 In Progress  |
 | Git Automation                   | ⏳ Planned      |
 | Pull Request Automation          | ⏳ Planned      |
 
@@ -36,7 +36,8 @@ The current implementation demonstrates a complete end-to-end AI editing workflo
 3. Generate a complete replacement file using the OpenAI Responses API
 4. Validate the generated output
 5. Replace the target source file
-6. Verify that the application still builds successfully
+6. Run a production build of the React application
+7. Report build success or failure
 
 The current scope is intentionally limited to a single target file while establishing a reliable architectural foundation for future milestones.
 
@@ -46,7 +47,7 @@ The current scope is intentionally limited to a single target file while establi
 
 Modern AI coding assistants demonstrate impressive code generation capabilities, but the surrounding engineering workflow—repository interaction, validation, Git automation, and software lifecycle management which is equally important.
 
-This project explores that orchestration layer by incrementally building an end-to-end AI-assisted development workflow while intentionally maintaining a working system at every milestone.
+This project explores the orchestration layer by incrementally building an end-to-end AI-assisted development workflow while intentionally maintaining a working system at every milestone. The orchestration pipeline now extends beyond AI-generated code modification to include automated production build validation, ensuring generated changes compile successfully before being considered complete.
 
 The long-term objective is to build an autonomous system capable of understanding natural language development requests, analyzing an existing repository, generating code modifications, validating those changes, and automating portions of the GitHub development lifecycle.
 
@@ -102,7 +103,9 @@ Validate Response
 Overwrite Target File
       │
       ▼
-React Build Verification
+Run Production Build 
+      ↓
+Report Build Pass/Fail
 ```
 
 Current architecture consists of:
@@ -114,7 +117,8 @@ Current architecture consists of:
 * AI-generated full file replacement
 * Basic response validation
 * Automated overwrite of the target file
-* React build verification
+* Automated production build validation
+* Build result reporting
 
 ---
 
@@ -157,7 +161,7 @@ This milestone establishes the first working end-to-end AI coding pipeline.
 
 ---
 
-## Milestone 1.4 — CLI Input Generalization
+## Milestone 2.1 — CLI Input Generalization
 
 Generalized the AI editing workflow by replacing the hardcoded modification request with command-line input.
 
@@ -172,6 +176,22 @@ This milestone separates user interaction from the orchestration pipeline, trans
 
 ---
 
+## Milestone 2.2 — Build Validation Automation
+
+Extended the AI editing workflow by introducing automated production build validation following AI-generated code modifications.
+
+The current system can:
+
+* Execute npm run build automatically after updating the target source file
+* Run the build within the target React repository
+* Capture build output from the validation process
+* Determine build success or failure using the process exit code
+* Report build results directly to the console
+
+This milestone extends the orchestration pipeline beyond code generation by automatically validating that AI-generated changes produce a successful production build. While the workflow now provides immediate feedback on build success or failure, capabilities such as rollback, Git automation, pull request creation, multi-file editing, and autonomous repair remain intentionally outside the current scope.
+
+---
+
 # Current Capabilities
 
 The current MVP can:
@@ -183,6 +203,8 @@ The current MVP can:
 * Validate generated output
 * Replace the original source file
 * Produce a successful React build after modification
+* Automatically execute a production build after AI-generated modifications
+* Report build success or failure to the user
 
 ---
 
@@ -222,28 +244,30 @@ These constraints are intentional while the core architecture is being establish
 ## 🚧 Phase 2 — Workflow Generalization
 
 * [x] CLI input
-* [ ] Automated build validation
-* [ ] Configurable targets
-* [ ] Repository context selection/Target discovery
+* [x] Automated build validation
+* [ ] Repository discovery
+* [ ] Target file selection
+* [ ] Context extraction
 * [ ] Prompt refinement
+
 ---
 
 ## ⏳ Phase 3 — Development Automation
 
-* [ ] Git branches
-* [ ] Commits
-* [ ] Pull requests
+* [ ] Git branch creation
+* [ ] Commit generation
 * [ ] Change summaries
+* [ ] Pull request creation
 
 ---
 
 ## ⏳ Phase 4 — Reliability & Scale
 
-* [ ] Multi-file edits
-* [ ] Validation improvements
-* [ ] Rollback
+* [ ] Multi-file editing
 * [ ] Test execution
-* [ ] Target adapters
+* [ ] Rollback
+* [ ] Autonomous repair
+* [ ] Repository adapters
 
 ---
 
